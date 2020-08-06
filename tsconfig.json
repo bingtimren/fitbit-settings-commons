@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "ES5", // fitbit engine does not support proxy (as of in 2020)
     "outDir": "build/main",
     "rootDir": "src",
     "moduleResolution": "node",
@@ -36,8 +36,8 @@
     // "emitDecoratorMetadata": true /* Enables experimental support for emitting type metadata for decorators. */,
 
     "lib": ["es2017"],
-    "types": [],
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "types": ["settings","jest"],
+    "typeRoots": ["node_modules/@types", "node_modules/fitbit-sdk-types/types"]
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules/**"],
