@@ -1,12 +1,16 @@
 {
   "name": "fitbit-settings-commons",
   "version": "1.0.0",
-  "description": "Helpers to make working with Fitbit setting API easier",
+  "description": "Helpers to make working with Fitbit settings API easier",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "repository": "https://github.com/bingtimren/fitbit-settings-commons",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "fitbit",
+    "settings",
+    "typescript"
+  ],
   "scripts": {
     "describe": "npm-scripts-info",
     "build": "run-s clean && run-p build:*",

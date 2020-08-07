@@ -9,26 +9,28 @@ export const ASIS: Readonly<object> = {}; // just a unique value as marker, shou
 type ASIS = typeof ASIS;
 
 /**
- * Provides typing to Fitbit settings, handles JSON encoding / decoding and persistence to settingStorage automatically.
+ * Helper handles JSON encoding / decoding and persistence to settingStorage.
  */
 export class TypedSettingProps<SettingsType extends object> {
-  private readonly tracker : {
-    typedSettings: { [k: string]: unknown };
-    trackedSettings : {[k:string]:any},
-    accessedRegistry : Set<string>
-  }= {
-    typedSettings: {},
-    trackedSettings: {},
-    accessedRegistry: new Set<string>()
-  };
+  // the settings
+  private readonly typedSettings: { [k: string]: unknown } = {};
+  // the tracker, with getter for each of the keys in settings, track access in accessRegistry
+  private readonly trackedSettings: { [k: string]: unknown } = {};
+  // registry to record access for later commit()
+  private readonly accessedRegistry: Set<string> = new Set<string>();
+
+  /**
+   *
+   * @param props the 'props' parameter received by the JSX
+   */
   constructor(private props: SettingsComponentProps) {
     // unpack from props.settings, attempt parse as JSON, or just set as string
     for (const [k, v] of Object.entries(props.settings)) {
       if (typeof v === 'string') {
         try {
-          this.tracker.typedSettings[k] = JSON.parse(v);
+          this.typedSettings[k] = JSON.parse(v);
         } catch {
-          this.tracker.typedSettings[k] = v;
+          this.typedSettings[k] = v;
         }
       }
       // install getter to tracker
@@ -36,19 +38,14 @@ export class TypedSettingProps<SettingsType extends object> {
     }
   }
   /**
-   * Takes a partial object of the settings, then updates the settings and takes care of preserving the
-   * updatted setting in settingStorage. For example:
+   * Takes a partial settings, then updates the settings and takes care of preserving the
+   * updates in settingStorage.
    *
+   * The value of a property of the partial settings can also be the constant ASIS, which is
+   * defined in this package. This denotes that the value of the property in the setting
+   * object is to be used as is.
    *
-   *
-   *
-   * The value of a property of the partial object can also be
-   * the constant ASIS, which is defined in this package. When ASIS is found as a value of a property, the
-   * value of the property in the setting object is used.
-   *
-   *
-   * @param value a partial object of SettingsType to update, and the value of a property, such as an array,
-   * can be the constant ASIS, used as a marker to
+   * @param value a partial SettingsType object
    */
   public update(
     value: Partial<
@@ -59,8 +56,7 @@ export class TypedSettingProps<SettingsType extends object> {
   ): void {
     for (const [k, v] of Object.entries(value)) {
       const val =
-        v === ASIS ? this.tracker.typedSettings[k] : (this.tracker.typedSettings[k] = v);
-
+        v === ASIS ? this.typedSettings[k] : (this.typedSettings[k] = v);
       this.persist(k, val);
     }
   }
@@ -69,17 +65,21 @@ export class TypedSettingProps<SettingsType extends object> {
    * To update the settings, use 'update' method.
    */
   public get(): Readonly<SettingsType> {
-    return this.tracker.typedSettings as Readonly<SettingsType>;
+    return this.typedSettings as Readonly<SettingsType>;
   }
   public getToUpdate(): Readonly<SettingsType> {
-    return this.tracker.trackedSettings as Readonly<SettingsType>;
+    return this.trackedSettings as Readonly<SettingsType>;
   }
+  /**
+   * update all the properties that has been accessed through getToUpdate() to the settingsStorage
+   */
   public commit(): void {
-    this.tracker.accessedRegistry.forEach(k => {
-      this.persist(k, this.tracker.trackedSettings[k]);
+    this.accessedRegistry.forEach(k => {
+      this.persist(k, this.typedSettings[k]);
     });
-    this.tracker.accessedRegistry.clear();
+    this.accessedRegistry.clear();
   }
+  // persist key & value to settingsStorage, value cannot be ASIS
   private persist(key: string, val: any): void {
     // preserve the value to settingsStorage
     if (typeof val === 'string') {
@@ -90,13 +90,14 @@ export class TypedSettingProps<SettingsType extends object> {
       this.props.settingsStorage.setItem(key, JSON.stringify(val));
     }
   }
+  // install a tracker to trackedSettings to track access
   private track(key: string): void {
-    Object.defineProperty(this.tracker.trackedSettings, key, {
-      enumerable:true,
-      get: ((t, k) => (()=>{
-        t.accessedRegistry.add(k);
-        return t.typedSettings[k];
-      })) (this.tracker, key)
-  })
-  } 
+    Object.defineProperty(this.trackedSettings, key, {
+      enumerable: true,
+      get: () => {
+        this.accessedRegistry.add(key);
+        return this.typedSettings[key];
+      }
+    });
+  }
 }
