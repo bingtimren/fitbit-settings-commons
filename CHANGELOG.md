@@ -5,3 +5,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### 1.0.1 (2020-08-07)
 
 First version. All tests passed. 100% coverage.
+
+### 1.0.2 (2020-08-13)
+
+Updated README
