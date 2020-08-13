@@ -8,7 +8,7 @@ When using Typescript the wrapper uses a generic type variable to denote the set
 
 ## Usage
 
-The code examples are provided in Typescript.
+The code examples are provided in Typescript and TSX.
 
 ### Install the library
 
@@ -24,7 +24,7 @@ import {TypedSettingProps, ASIS, SettingsComponentProps} from "fitbit-settings-c
 
 ### Using SettingsComponentProps
 
-`SettingsComponentProps` is the type of the 'props' parameter received by the settings JSX. It can be used to type the 'props' parameter in typescript to provide autocomplete and type checking.
+`SettingsComponentProps` is the type of the 'props' parameter received by the settings JSX. It can be used in TSX to type the 'props' parameter in typescript to provide autocomplete and type checking.
 
 ```tsx
 function SettingsPage(props: SettingsComponentProps) {
@@ -83,6 +83,15 @@ For example:
     })
 ```
 
+The parameter of the `update()` method is typed. In typescript, type checking and autocomplete will be available to the parameter.
+
+```typescript
+    typedSetting.update({
+      stringVal: 42 // error
+    })
+```
+
+
 ### Updating part of a setting object or array
 
 If an **existing** setting value is an object or array, to update **part** of the value without replacing the whole object or array, use `getToUpdate()`. This method returns a tracked setting object. When accessing a property of the tracked setting object through a key, the key is marked as 'dirty', meaning it's assumed that the property is changed and needs to be persisted to `settingsStorage` later. In the end the `commit()` method of the wrapper needs to be called to persist all the 'dirty' properties. For example: 
@@ -92,7 +101,7 @@ If an **existing** setting value is an object or array, to update **part** of th
     typedSetting.commit();
 ```
 
-The returned tracked setting object is readonly. To set a property directly, use `update()`.
+The returned tracked setting object is typed and readonly. Any property such as an object or array can be partially updated but not replaced. To set a property directly, use `update()`.
 
 ### Updating a setting ASIS
 
