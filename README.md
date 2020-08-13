@@ -19,7 +19,7 @@ npm i --save fitbit-settings-commons
 ### Import the artifacts
 
 ```typescript
-import {TypedSettingProps, ASIS, SettingsComponentProps} from "fitbit-settings-commons"
+import {TypedSettingProps, ASIS, SettingsComponentProps, StringifyParseOptions} from "fitbit-settings-commons"
 ```
 
 ### Using SettingsComponentProps
@@ -46,13 +46,15 @@ To use `TypedSettingProps` in typescript, it's preferrable to first define the s
 
 ```typescript
 interface SettingType {
-  stringVal: string | undefined;
-  numberVal: number | undefined;
-  objVal:
-    {
+  stringVal?: string ;
+  stringConfusingVal_s?: string ;
+  numberVal?: number;
+  objVal?:
+    | {
         stringProp: string;
-    } | undefined;
-  arrayVal: string[]|undefined;
+      }
+    | undefined;
+  arrayVal?: string[] | undefined;
 }
 ```
 
@@ -120,3 +122,31 @@ For example, after partially changing the property `objVal`, the two callings of
       objVal: typedSetting.get().objVal
     });    
 ```
+
+### Set Stringify Parse Behaviour
+
+As mentioned, when the wrapper extracts values from props.settings, wrapper calls `JSON.parse()` to extract non-string objects. When wrapper persists value into props.settingsStorage, wrapper calls `JSON.stringify()` to encode values into strings. Enum `StringifyParseOptions` provides three options to set the stringify/parse behaviour of the wrapper. 
+
+To set a behaviour other than the default, pass a second parameter into the wrapper's constructor, for example:
+
+```typescript
+const typedSetting : TypedSettingProps<SettingType>
+    = new TypedSettingProps(props, StringifyParseOptions.Stringify_NonString_Parse_Always);
+```
+
+The three options are:
+
+**Stringify_Always_Parse_Always [Default Option]**: 
+- On update always JSON.stringify, even if value is a string ('8' would be set as '"8"' in storage);
+- On unpacking always attempts JSON.parse, if fails then use the string as is;
+- This is the default behaviour, it make sure values after packed / unpacked remain the same. However, string values will be put into props.settingsStorage as JSON as well, meaning the extra '"' wrapping the strings.
+
+**Stringify_NonString_Parse_Always**:
+- On update only JSON.stringify non-string values;
+- On unpacking always attempts JSON.parse;
+- This option does not guarantee round-trip ('8' packed as '8' then unpacked as 8, a number)
+
+**Stringify_NonString_Parse_Key_Decide**:
+- On update only JSON.stringify non-string values;
+- On unpacking, when key ends with "_s" or "_S" (indicating string value) does NOT attempt JSON.parse, otherwise attempts JSON.parse;
+- This option works if you name the keys of string type values to end with "_s" or "_S"

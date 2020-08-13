@@ -13,3 +13,7 @@ First version. All tests passed. 100% coverage.
 ### 1.0.2 (2020-08-13)
 
 Updated README
+
+### 1.0.3 (2020-08-14)
+
+Added StringifyParseOptions to set wrapper's packing (stringify) and unpacking (parse) behaviour
