@@ -73,7 +73,7 @@
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
-				<p>The code examples are provided in Typescript.</p>
+				<p>The code examples are provided in Typescript and TSX.</p>
 				<a href="#install-the-library" id="install-the-library" style="color: inherit; text-decoration: none;">
 					<h3>Install the library</h3>
 				</a>
@@ -85,7 +85,7 @@
 				<a href="#using-settingscomponentprops" id="using-settingscomponentprops" style="color: inherit; text-decoration: none;">
 					<h3>Using SettingsComponentProps</h3>
 				</a>
-				<p><code>SettingsComponentProps</code> is the type of the &#39;props&#39; parameter received by the settings JSX. It can be used to type the &#39;props&#39; parameter in typescript to provide autocomplete and type checking.</p>
+				<p><code>SettingsComponentProps</code> is the type of the &#39;props&#39; parameter received by the settings JSX. It can be used in TSX to type the &#39;props&#39; parameter in typescript to provide autocomplete and type checking.</p>
 				<pre><code class="language-tsx">function SettingsPage(props: SettingsComponentProps) {
     return (
       &lt;Page&gt;
@@ -127,6 +127,10 @@ registerSettingsPage(SettingsPage);  </code></pre>
 				<pre><code class="language-typescript">    typedSetting.update({
       stringVal:<span class="hljs-string">"new string val"</span>
     })</code></pre>
+				<p>The parameter of the <code>update()</code> method is typed. In typescript, type checking and autocomplete will be available to the parameter.</p>
+				<pre><code class="language-typescript">    typedSetting.update({
+      stringVal: <span class="hljs-number">42</span> <span class="hljs-comment">// error</span>
+    })</code></pre>
 				<a href="#updating-part-of-a-setting-object-or-array" id="updating-part-of-a-setting-object-or-array" style="color: inherit; text-decoration: none;">
 					<h3>Updating part of a setting object or array</h3>
 				</a>
@@ -134,7 +138,7 @@ registerSettingsPage(SettingsPage);  </code></pre>
 				<pre><code class="language-typescript">    typedSetting.getToUpdate().objVal!.stringProp = <span class="hljs-string">'new property'</span>;
     typedSetting.getToUpdate().arrayVal!.push(<span class="hljs-string">'new element'</span>);
     typedSetting.commit();</code></pre>
-				<p>The returned tracked setting object is readonly. To set a property directly, use <code>update()</code>.</p>
+				<p>The returned tracked setting object is typed and readonly. Any property such as an object or array can be partially updated but not replaced. To set a property directly, use <code>update()</code>.</p>
 				<a href="#updating-a-setting-asis" id="updating-a-setting-asis" style="color: inherit; text-decoration: none;">
 					<h3>Updating a setting ASIS</h3>
 				</a>
