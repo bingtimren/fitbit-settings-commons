@@ -1,8 +1,13 @@
-import { TypedSettingProps, StringifyParseOptions, ASIS } from '..';
+import { TypedSettingProps, ASIS, PackerUnpackerOption } from '..';
+import {
+  DefaultPackerUnpackerOption,
+  stringifyNonString,
+  jsonParseUnpackInitiator
+} from './typed-settings';
 
 interface SettingType {
   stringVal?: string;
-  stringConfusingVal_s?: string;
+  stringConfusingVal?: string;
   numberVal?: number;
   objVal?:
     | {
@@ -10,6 +15,7 @@ interface SettingType {
       }
     | undefined;
   arrayVal?: string[] | undefined;
+  theAnswer?: number;
 }
 
 describe('Typed Setting Props', () => {
@@ -36,6 +42,7 @@ describe('Typed Setting Props', () => {
   for (const [k, v] of Object.entries(mockSettingsStorage)) {
     if (typeof v === 'function') v.mockName(k);
   }
+  // example settings
   const exampleSettings: SettingType = {
     arrayVal: ['a', 'b', 'c'],
     numberVal: 42,
@@ -43,23 +50,78 @@ describe('Typed Setting Props', () => {
       stringProp: 'I am a string property inside an object'
     },
     stringVal: 'I am a string value',
-    stringConfusingVal_s: '42'
+    stringConfusingVal: '42'
   };
+  // list of different packer/unpacker options for testing
+  const packerUnpackerOptions: {
+    [k: string]: [
+      PackerUnpackerOption<SettingType> | undefined,
+      DefaultPackerUnpackerOption | undefined
+    ];
+  } = {
+    DEFAULT: [undefined, undefined],
+    ConfusingStringASIS: [
+      {
+        stringConfusingVal: {
+          packer: v => v,
+          unpackInitiator: v => v
+        }
+      },
+      undefined
+    ],
+    StringifyNonString: [
+      undefined,
+      {
+        packer: stringifyNonString
+      }
+    ],
+    DEFAULT_ALT: [
+      undefined,
+      {
+        unpacker: jsonParseUnpackInitiator
+      }
+    ],
+    DEFAULT_PACKER_UNPACKER: [
+      undefined,
+      {
+        packer: JSON.stringify,
+        unpacker: jsonParseUnpackInitiator
+      }
+    ],
+    DEFAULT_ALT2: [
+      {
+        theAnswer: {
+          unpackInitiator: jsonParseUnpackInitiator
+        }
+      },
+      undefined
+    ],
+    TheAnswerHasDefault: [
+      {
+        theAnswer: {
+          unpackInitiator: v => (v ? JSON.parse(v) : 42)
+        }
+      },
+      undefined
+    ]
+  };
+
   // prepare packed examples under various options
   const examplePackedSettingsByOptions: {
-    [k: string]: { [k: string]: string };
+    [desc: string]: { [k: string]: string };
   } = {};
-  for (const o of Object.values(StringifyParseOptions)) {
+  for (const [desc, option] of Object.entries(packerUnpackerOptions)) {
     mockSettingsStorage.clear();
     const ts = new TypedSettingProps<SettingType>(
       {
         settings: {},
         settingsStorage: mockSettingsStorage
       },
-      o as StringifyParseOptions
+      option[0],
+      option[1]
     );
     ts.update(exampleSettings);
-    examplePackedSettingsByOptions[o] = Object.assign(
+    examplePackedSettingsByOptions[desc] = Object.assign(
       {},
       mockedStorageInternal
     );
@@ -75,19 +137,28 @@ describe('Typed Setting Props', () => {
     (option, examplePackedSettings) => {
       const typedSetting: TypedSettingProps<SettingType> = new TypedSettingProps(
         {
-          settings: examplePackedSettings,
+          settings: examplePackedSettings!,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       switch (option) {
-        case StringifyParseOptions.Stringify_NonString_Parse_Always:
+        case 'StringifyNonString': // always parse caused '42' changed to 42
           expect(typedSetting.get()).toEqual(
-            Object.assign({}, exampleSettings, { stringConfusingVal_s: 42 })
-          ); // parse-always problem
+            Object.assign({}, exampleSettings, {
+              stringConfusingVal: 42
+            })
+          );
           break;
-        case StringifyParseOptions.Stringify_Always_Parse_Always:
-        case StringifyParseOptions.Stringify_NonString_Parse_Key_Decide:
+        case 'TheAnswerHasDefault': // test default works
+          expect(typedSetting.get()).toEqual(
+            Object.assign({}, exampleSettings, {
+              theAnswer: 42
+            })
+          );
+          break;
+        default:
           expect(typedSetting.get()).toEqual(exampleSettings);
       }
     }
@@ -101,7 +172,8 @@ describe('Typed Setting Props', () => {
           settings: {},
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       typedSetting.update(exampleSettings);
       const clone = Object.assign({}, mockedStorageInternal);
@@ -110,16 +182,26 @@ describe('Typed Setting Props', () => {
           settings: clone,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       switch (option) {
-        case StringifyParseOptions.Stringify_NonString_Parse_Always:
+        case 'StringifyNonString': // always parse caused '42' changed to 42
           expect(unpacked.get()).toEqual(
-            Object.assign({}, exampleSettings, { stringConfusingVal_s: 42 })
-          ); // parse-always problem
+            Object.assign({}, exampleSettings, {
+              stringConfusingVal: 42
+            })
+          );
           break;
-        case StringifyParseOptions.Stringify_Always_Parse_Always:
-        case StringifyParseOptions.Stringify_NonString_Parse_Key_Decide:
+        case 'TheAnswerHasDefault': // test default works
+          expect(unpacked.get()).toEqual(
+            Object.assign({}, exampleSettings, {
+              theAnswer: 42
+            })
+          );
+          break;
+
+        default:
           expect(unpacked.get()).toEqual(exampleSettings);
       }
     }
@@ -133,16 +215,26 @@ describe('Typed Setting Props', () => {
           settings: examplePackedSettings,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       switch (option) {
-        case StringifyParseOptions.Stringify_NonString_Parse_Always:
+        case 'StringifyNonString': // always parse caused '42' changed to 42
           expect(typedSetting.getToUpdate()).toEqual(
-            Object.assign({}, exampleSettings, { stringConfusingVal_s: 42 })
-          ); // parse-always problem
+            Object.assign({}, exampleSettings, {
+              stringConfusingVal: 42
+            })
+          );
           break;
-        case StringifyParseOptions.Stringify_NonString_Parse_Key_Decide:
-        case StringifyParseOptions.Stringify_Always_Parse_Always:
+        case 'TheAnswerHasDefault': // test default works
+          expect(typedSetting.getToUpdate()).toEqual(
+            Object.assign({}, exampleSettings, {
+              theAnswer: 42
+            })
+          );
+          break;
+
+        default:
           expect(typedSetting.getToUpdate()).toEqual(exampleSettings);
       }
     }
@@ -156,7 +248,8 @@ describe('Typed Setting Props', () => {
           settings: examplePackedSettings,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       typedSetting.commit();
       for (const [_k, f] of Object.entries(mockSettingsStorage)) {
@@ -173,7 +266,8 @@ describe('Typed Setting Props', () => {
           settings: examplePackedSettings,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       // update an array
       typedSetting.getToUpdate().arrayVal!.push('d');
@@ -209,7 +303,8 @@ describe('Typed Setting Props', () => {
           settings: examplePackedSettings,
           settingsStorage: mockSettingsStorage
         },
-        option as StringifyParseOptions
+        packerUnpackerOptions[option][0],
+        packerUnpackerOptions[option][1]
       );
       // update a string property
       typedSetting.update({
@@ -217,12 +312,14 @@ describe('Typed Setting Props', () => {
       });
       expect(mockSettingsStorage.setItem).toBeCalledTimes(1);
       expect(typedSetting.get().stringVal).toEqual('new string val');
-      expect(mockSettingsStorage.setItem).toHaveBeenLastCalledWith(
-        'stringVal',
-        option === StringifyParseOptions.Stringify_Always_Parse_Always
-          ? JSON.stringify('new string val')
-          : 'new string val'
-      );
+      switch (option) {
+        case 'DEFAULT':
+        case 'ConfusingStringASIS':
+          expect(mockSettingsStorage.setItem).toHaveBeenLastCalledWith(
+            'stringVal',
+            JSON.stringify('new string val')
+          );
+      }
 
       // update a number
       typedSetting.update({

@@ -21,3 +21,7 @@ Updated README
 ### 1.0.3 (2020-08-14)
 
 Added StringifyParseOptions to set wrapper's packing (stringify) and unpacking (parse) behaviour
+
+### 2.0 (2020-08-19)
+
+Breaking change, removed enum StringifyParseOptions, instead uses optional parameters to provide packers / unpackers

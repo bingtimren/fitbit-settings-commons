@@ -1,14 +1,18 @@
 # fitbit-settings-commons
 
-Fitbit settings use React JSX that receives a `props` parameter. The JSX receives persisted settings from `props.settings`, and persists settings with `props.settingStorage`. In both cases the settings values must be strings. Values other than strings need to be 'packed' into strings with `JSON.stringify()`. 
+Fitbit settings use React JSX that receives a `props` parameter. The JSX receives persisted settings from `props.settings`, and persists settings with `props.settingStorage`. In both cases the settings values must be strings. Values other than strings need to be 'packed' into strings with `JSON.stringify()` and 'unpacked' from strings with `JSON.parse()`. 
 
-This library provides a wrapper to make it easier to work with Fitbit Setting API. The wrapper "unpacks" the values from `props.settings` when the values can be decoded by `JSON.parse()`, so that further codes can deal with the unpacked settings directly. Setting changes can be made to the unpacked settings. The wrapper "packs" the values that are not strings with `JSON.stringify()`, and persists to the `props.settingsStorage` behind the scene.
+This library provides a wrapper to make it easier to work with Fitbit Setting API. Behind the scene, the wrapper 'packs' and 'unpacks' settings into / from strings, and persists to the `props.settingsStorage`, so that users don't need to do that in their codes. 
+
+By default, 'packs' always uses `JSON.stringify()` to encode settings, even if the value is a string, and 'unpacks' always attempts to decode strings with `JSON.parse()` and, if that fails, return the strings as is. This default behaviour ensures that a value being packed and then unpacked would not change. However, if the value is a string, the stringified version of the string (i.e. wrapped in "") is put inside the store. 
+
+The packing and unpacking behaviours can be customised at general level or at individual property level. An unpacker at individual level can also act as an initializer, to provide a default value where no value is provided in `props.settings`.
 
 When using Typescript the wrapper uses a generic type variable to denote the setting's type, allowing the development tools to type checking and autocomplete the unpacked settings.
 
 ## Usage
 
-The code examples are provided in Typescript and TSX.
+See below. The code examples are provided in Typescript and TSX.
 
 ### Install the library
 
@@ -22,23 +26,7 @@ npm i --save fitbit-settings-commons
 import {TypedSettingProps, ASIS, SettingsComponentProps, StringifyParseOptions} from "fitbit-settings-commons"
 ```
 
-### Using SettingsComponentProps
-
-`SettingsComponentProps` is the type of the 'props' parameter received by the settings JSX. It can be used in TSX to type the 'props' parameter in typescript to provide autocomplete and type checking.
-
-```tsx
-function SettingsPage(props: SettingsComponentProps) {
-    return (
-      <Page>
-        <Section
-          title={<Text bold align="center">Demo Settings</Text>}>
-        </Section>
-      </Page>
-    );
-  }
-  
-registerSettingsPage(SettingsPage);  
-```
+See [API document](docs/index.html) for details.
 
 ### Using TypedSettingProps Wrapper
 
@@ -85,7 +73,7 @@ For example:
     })
 ```
 
-The parameter of the `update()` method is typed. In typescript, type checking and autocomplete will be available to the parameter.
+If SettingsType generic type is provided, the parameter of the `update()` method is typed. In typescript, type checking and autocomplete will be available to the parameter.
 
 ```typescript
     typedSetting.update({
@@ -107,7 +95,7 @@ The returned tracked setting object is typed and readonly. Any property such as 
 
 ### Updating a setting ASIS
 
-Another way of updating settings is to make the changes directly on the unpacked settings, then call `update()` with a constant `ASIS` that is exported from this library as a marker to denote the changed properties. The value of the denoted property would be taken from the unpacked settings "as is". 
+Another way of updating settings is to make the changes directly on the unpacked settings, then call `update()` with a constant `ASIS`, which is exported from this library as a marker to denote the changed properties. The value of the denoted property would be taken from the unpacked settings "as is". 
 
 For example, after partially changing the property `objVal`, the two callings of `update()` are equal, however using ASIS makes the method 1 shorter and less prone to error.
 
@@ -125,28 +113,33 @@ For example, after partially changing the property `objVal`, the two callings of
 
 ### Set Stringify Parse Behaviour
 
-As mentioned, when the wrapper extracts values from props.settings, wrapper calls `JSON.parse()` to extract non-string objects. When wrapper persists value into props.settingsStorage, wrapper calls `JSON.stringify()` to encode values into strings. Enum `StringifyParseOptions` provides three options to set the stringify/parse behaviour of the wrapper. 
-
-To set a behaviour other than the default, pass a second parameter into the wrapper's constructor, for example:
+The constructor of the wrapper `TypedSettingProps` can receive two additional optional parameters to customise the packing / unpacking / initialisation behaviour of the wrapper for individual setting keys as well as the default behaviour for all keys.
 
 ```typescript
-const typedSetting : TypedSettingProps<SettingType>
-    = new TypedSettingProps(props, StringifyParseOptions.Stringify_NonString_Parse_Always);
+  constructor(
+    private props: SettingsComponentProps,
+    private packerUnpackers?: PackerUnpackerOption<SettingsType>,
+    defaultPackerUnpacker?: DefaultPackerUnpackerOption
+  ) 
 ```
 
-The three options are:
+The parameter `packerUnpackers` customise wrapper's packing / unpacking / initialization behaviour for individual properties of the settings. The value should be an object with matching keys of the SettingsType. Under a matching key, 'packer' and 'unpackInitiator' can optionally be provided as functions. For example:
 
-**Stringify_Always_Parse_Always [Default Option]**: 
-- On update always JSON.stringify, even if value is a string ('8' would be set as '"8"' in storage);
-- On unpacking always attempts JSON.parse, if fails then use the string as is;
-- This is the default behaviour, it make sure values after packed / unpacked remain the same. However, string values will be put into props.settingsStorage as JSON as well, meaning the extra '"' wrapping the strings.
+``` typescript
+  {
+    stringConfusingVal: {
+      packer: v => v,
+      unpackInitiator: v => v
+    }
+  }
+```
+- A packer function receives a value of the type of the matching SettingsType property and returns a string.
+- An unpackInitiator receives a string or `undefined` and returns a value of the type of the matching SettingsType property. If an unpackInitiator is provided, but no setting is under the matching key in `props.settings`, the unpackInitiator will be called with `undefined`, acting as an initiator to return a default value for the key.
 
-**Stringify_NonString_Parse_Always**:
-- On update only JSON.stringify non-string values;
-- On unpacking always attempts JSON.parse;
-- This option does not guarantee round-trip ('8' packed as '8' then unpacked as 8, a number)
-
-**Stringify_NonString_Parse_Key_Decide**:
-- On update only JSON.stringify non-string values;
-- On unpacking, when key ends with "_s" or "_S" (indicating string value) does NOT attempt JSON.parse, otherwise attempts JSON.parse;
-- This option works if you name the keys of string type values to end with "_s" or "_S"
+The parameter `defaultPackerUnpacker` customise the default pack / unpack behaviour of the wrapper for all SettingsType properties. The value should be an object, with optional keys `packer` and / or `unpacker` providing the default packer / unpacker. Example value below sets a behaviour identical to the default behaviour of the wrapper.
+```typescript
+  {
+    packer: JSON.stringify,
+    unpacker: jsonParseUnpackInitiator
+  }
+```

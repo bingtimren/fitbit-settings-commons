@@ -23,12 +23,12 @@
     "test:unit": "jest --coverage",
     "watch": "run-s clean build:main && run-p \"build:main -- -w\" \"test:unit -- --watch\"",
     "doc": "run-s doc:html && open-cli build/docs/index.html",
-    "doc:html": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --out build/docs",
+    "doc:html": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --out docs",
     "doc:json": "typedoc src/ --exclude **/*.test.ts --target ES6 --mode file --json build/docs/typedoc.json",
     "doc:publish": "gh-pages -m \"[ci skip] Updates\" -d build/docs",
     "version": "standard-version",
     "reset": "git clean -dfx && git reset --hard && npm i",
-    "clean": "trash build test",
+    "clean": "trash build test docs",
     "prepare-release": "run-s reset test doc:html version doc:publish"
   },
   "scripts-info": {
@@ -67,6 +67,7 @@
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-immutable": "^6.0.1",
+    "typedoc": "^0.18.0",
     "typescript": "^3.5.3"
   },
   "config": {
