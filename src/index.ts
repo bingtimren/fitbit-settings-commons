@@ -17,8 +17,8 @@
  * ```
  */
 export interface SettingsComponentProps {
-	readonly settings: { [key: string]: string | undefined };
-	readonly settingsStorage: LiveStorage;
+  readonly settings: { [key: string]: string | undefined };
+  readonly settingsStorage: LiveStorage;
 }
 /**
  * A marker, to be used with TypedSettingProps.update()
