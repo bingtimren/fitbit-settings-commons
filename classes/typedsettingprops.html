@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>TypedSettingProps | fitbit-settings-commons</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for fitbit-settings-commons">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -66,6 +66,18 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A wrapper to make it easier to work with Fitbit Setting API.</p>
+					</div>
+					<p>Behind the scene, the wrapper &#39;packs&#39; and &#39;unpacks&#39; settings into / from strings, and persists to the <code>props.settingsStorage</code>,
+						so that users don&#39;t need to do that in their codes. By default, &#39;packs&#39; always uses <code>JSON.stringify()</code> to encode settings, even
+						if the value is a string, and &#39;unpacks&#39; always attempts to decode strings with <code>JSON.parse()</code> and, if that fails, return the
+					strings as is. The packing and unpacking behaviours can be customised.</p>
+					<p>Receives an optional generic type SettingsType, which is the type of the unpacked settings.</p>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-type-parameters">
 				<h3>Type parameters</h3>
 				<ul class="tsd-type-parameters">
@@ -96,7 +108,9 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#accessedregistry" class="tsd-kind-icon">accessed<wbr>Registry</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#option" class="tsd-kind-icon">option</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#defaultpacker" class="tsd-kind-icon">default<wbr>Packer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#defaultunpackinitiator" class="tsd-kind-icon">default<wbr>Unpack<wbr>Initiator</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#packerunpackers" class="tsd-kind-icon">packer<wbr>Unpackers</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#props" class="tsd-kind-icon">props</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#trackedsettings" class="tsd-kind-icon">tracked<wbr>Settings</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="typedsettingprops.html#typedsettings" class="tsd-kind-icon">typed<wbr>Settings</a></li>
@@ -122,22 +136,45 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Typed<wbr>Setting<wbr>Props<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SettingsComponentProps</span>, option<span class="tsd-signature-symbol">?: </span><a href="../enums/stringifyparseoptions.html" class="tsd-signature-type">StringifyParseOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="typedsettingprops.html" class="tsd-signature-type">TypedSettingProps</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Typed<wbr>Setting<wbr>Props<span class="tsd-signature-symbol">(</span>props<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SettingsComponentProps</span>, packerUnpackers<span class="tsd-signature-symbol">?: </span><a href="../globals.html#packerunpackeroption" class="tsd-signature-type">PackerUnpackerOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SettingsType</span><span class="tsd-signature-symbol">&gt;</span>, defaultPackerUnpacker<span class="tsd-signature-symbol">?: </span><a href="../interfaces/defaultpackerunpackeroption.html" class="tsd-signature-type">DefaultPackerUnpackerOption</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="typedsettingprops.html" class="tsd-signature-type">TypedSettingProps</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L42">lib/typed-settings.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L109">lib/typed-settings.ts:109</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a wrapper of the &#39;props&#39;, and optionally customise the packing / unpacking behaviour of the wrapper.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>props: <span class="tsd-signature-type">SettingsComponentProps</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>the &#39;props&#39; parameter received by the JSX</p>
+										</div>
+									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> option: <a href="../enums/stringifyparseoptions.html" class="tsd-signature-type">StringifyParseOptions</a><span class="tsd-signature-symbol"> =&nbsp;StringifyParseOptions.Stringify_Always_Parse_Always</span></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> packerUnpackers: <a href="../globals.html#packerunpackeroption" class="tsd-signature-type">PackerUnpackerOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SettingsType</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>option to customise wrapper&#39;s packing / unpacking / initialization behaviour for individual properties of the settings.
+											See <code>PackerUnpackerOption</code> for more details.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> defaultPackerUnpacker: <a href="../interfaces/defaultpackerunpackeroption.html" class="tsd-signature-type">DefaultPackerUnpackerOption</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+										</div>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="typedsettingprops.html" class="tsd-signature-type">TypedSettingProps</a></h4>
@@ -149,23 +186,91 @@
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="accessedregistry" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> accessed<wbr>Registry</h3>
-					<div class="tsd-signature tsd-kind-icon">accessed<wbr>Registry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;new Set&lt;string&gt;()</span></div>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> accessed<wbr>Registry</h3>
+					<div class="tsd-signature tsd-kind-icon">accessed<wbr>Registry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = new Set&lt;string&gt;()</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L42">lib/typed-settings.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L106">lib/typed-settings.ts:106</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="option" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> option</h3>
-					<div class="tsd-signature tsd-kind-icon">option<span class="tsd-signature-symbol">:</span> <a href="../enums/stringifyparseoptions.html" class="tsd-signature-type">StringifyParseOptions</a></div>
+					<a name="defaultpacker" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> default<wbr>Packer</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Packer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../globals.html#nonundefined" class="tsd-signature-type">NonUndefined</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L50">lib/typed-settings.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L108">lib/typed-settings.ts:108</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><a href="../globals.html#nonundefined" class="tsd-signature-type">NonUndefined</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>value: <a href="../globals.html#nonundefined" class="tsd-signature-type">NonUndefined</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="defaultunpackinitiator" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> default<wbr>Unpack<wbr>Initiator</h3>
+					<div class="tsd-signature tsd-kind-icon">default<wbr>Unpack<wbr>Initiator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">unknown</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L109">lib/typed-settings.ts:109</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>settings<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>settings: <span class="tsd-signature-type">string</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">unknown</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="packerunpackers" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> packer<wbr>Unpackers</h3>
+					<div class="tsd-signature tsd-kind-icon">packer<wbr>Unpackers<span class="tsd-signature-symbol">:</span> <a href="../globals.html#packerunpackeroption" class="tsd-signature-type">PackerUnpackerOption</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SettingsType</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L120">lib/typed-settings.ts:120</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>option to customise wrapper&#39;s packing / unpacking / initialization behaviour for individual properties of the settings.
+							See <code>PackerUnpackerOption</code> for more details.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="props" class="tsd-anchor"></a>
@@ -173,17 +278,22 @@
 					<div class="tsd-signature tsd-kind-icon">props<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SettingsComponentProps</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L49">lib/typed-settings.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L119">lib/typed-settings.ts:119</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>the &#39;props&#39; parameter received by the JSX</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="trackedsettings" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> tracked<wbr>Settings</h3>
-					<div class="tsd-signature tsd-kind-icon">tracked<wbr>Settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> tracked<wbr>Settings</h3>
+					<div class="tsd-signature tsd-kind-icon">tracked<wbr>Settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L40">lib/typed-settings.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L104">lib/typed-settings.ts:104</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -197,11 +307,11 @@
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="typedsettings" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> typed<wbr>Settings</h3>
-					<div class="tsd-signature tsd-kind-icon">typed<wbr>Settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> typed<wbr>Settings</h3>
+					<div class="tsd-signature tsd-kind-icon">typed<wbr>Settings<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L38">lib/typed-settings.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L102">lib/typed-settings.ts:102</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -226,9 +336,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L113">lib/typed-settings.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L190">lib/typed-settings.ts:190</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>update all the properties that has been accessed through getToUpdate() to the settingsStorage</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -243,9 +358,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L104">lib/typed-settings.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L175">lib/typed-settings.ts:175</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a typed, readonly copy of the settings.
+									To update the settings, use &#39;update&#39; method.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SettingsType</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -260,9 +381,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L107">lib/typed-settings.ts:107</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L184">lib/typed-settings.ts:184</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a tracked setting object. When accessing a property of the tracked setting object through a key, the key is marked as &#39;dirty&#39;,
+										meaning it&#39;s assumed that the property is changed and needs to be persisted to <code>settingsStorage</code> later. In the end the <code>commit()</code> method
+									of the wrapper needs to be called to persist all the &#39;dirty&#39; properties.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SettingsType</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -277,9 +405,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L120">lib/typed-settings.ts:120</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L202">lib/typed-settings.ts:202</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Persist key &amp; value to settingsStorage, value cannot be ASIS</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
@@ -287,6 +420,8 @@
 								</li>
 								<li>
 									<h5>val: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -303,13 +438,20 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L134">lib/typed-settings.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L218">lib/typed-settings.ts:218</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>install a tracker to trackedSettings to track access</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>key: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -320,19 +462,31 @@
 					<a name="update" class="tsd-anchor"></a>
 					<h3>update</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/447eead/src/lib/typed-settings.ts#L87">lib/typed-settings.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/bingtimren/fitbit-settings-commons/blob/2801078/src/lib/typed-settings.ts#L158">lib/typed-settings.ts:158</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Takes a partial settings, then updates the settings and takes care of preserving the
+									updates in settingStorage.</p>
+								</div>
+								<p>The value of a property of the partial settings can also be the constant ASIS, which is
+									defined in this package. This denotes that the value of the property in the setting
+								object is to be used as is.</p>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>value: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<h5>value: <span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{}</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>a partial SettingsType object</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -351,9 +505,6 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum">
-						<a href="../enums/stringifyparseoptions.html" class="tsd-kind-icon">Stringify<wbr>Parse<wbr>Options</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-has-type-parameter">
@@ -366,7 +517,13 @@
 								<a href="typedsettingprops.html#accessedregistry" class="tsd-kind-icon">accessed<wbr>Registry</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="typedsettingprops.html#option" class="tsd-kind-icon">option</a>
+								<a href="typedsettingprops.html#defaultpacker" class="tsd-kind-icon">default<wbr>Packer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="typedsettingprops.html#defaultunpackinitiator" class="tsd-kind-icon">default<wbr>Unpack<wbr>Initiator</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="typedsettingprops.html#packerunpackers" class="tsd-kind-icon">packer<wbr>Unpackers</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="typedsettingprops.html#props" class="tsd-kind-icon">props</a>
@@ -399,14 +556,29 @@
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-type-alias tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
+						<a href="../interfaces/defaultpackerunpackeroption.html" class="tsd-kind-icon">Default<wbr>Packer<wbr>Unpacker<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#asis" class="tsd-kind-icon">ASIS</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../globals.html#nonundefined" class="tsd-kind-icon">Non<wbr>Undefined</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="../globals.html#packerunpackeroption" class="tsd-kind-icon">Packer<wbr>Unpacker<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../globals.html#settingscomponentprops" class="tsd-kind-icon">Settings<wbr>Component<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="../globals.html#asis" class="tsd-kind-icon">ASIS</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#jsonparseunpackinitiator" class="tsd-kind-icon">json<wbr>Parse<wbr>Unpack<wbr>Initiator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../globals.html#stringifynonstring" class="tsd-kind-icon">stringify<wbr>Non<wbr>String</a>
 					</li>
 				</ul>
 			</nav>
@@ -418,57 +590,15 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 		</div>
 	</div>
@@ -478,6 +608,5 @@
 </div>
 <div class="overlay"></div>
 <script src="../assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

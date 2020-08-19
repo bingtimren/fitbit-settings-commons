@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>fitbit-settings-commons</title>
-	<meta name="description" content="">
+	<meta name="description" content="Documentation for fitbit-settings-commons">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
@@ -13,7 +13,7 @@
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -56,7 +56,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> fitbit-settings-commons</h1>
+			<h1>fitbit-settings-commons</h1>
 		</div>
 	</div>
 </header>
@@ -67,13 +67,15 @@
 				<a href="#fitbit-settings-commons" id="fitbit-settings-commons" style="color: inherit; text-decoration: none;">
 					<h1>fitbit-settings-commons</h1>
 				</a>
-				<p>Fitbit settings use React JSX that receives a <code>props</code> parameter. The JSX receives persisted settings from <code>props.settings</code>, and persists settings with <code>props.settingStorage</code>. In both cases the settings values must be strings. Values other than strings need to be &#39;packed&#39; into strings with <code>JSON.stringify()</code>. </p>
-				<p>This library provides a wrapper to make it easier to work with Fitbit Setting API. The wrapper &quot;unpacks&quot; the values from <code>props.settings</code> when the values can be decoded by <code>JSON.parse()</code>, so that further codes can deal with the unpacked settings directly. Setting changes can be made to the unpacked settings. The wrapper &quot;packs&quot; the values that are not strings with <code>JSON.stringify()</code>, and persists to the <code>props.settingsStorage</code> behind the scene.</p>
+				<p>Fitbit settings use React JSX that receives a <code>props</code> parameter. The JSX receives persisted settings from <code>props.settings</code>, and persists settings with <code>props.settingStorage</code>. In both cases the settings values must be strings. Values other than strings need to be &#39;packed&#39; into strings with <code>JSON.stringify()</code> and &#39;unpacked&#39; from strings with <code>JSON.parse()</code>. </p>
+				<p>This library provides a wrapper to make it easier to work with Fitbit Setting API. Behind the scene, the wrapper &#39;packs&#39; and &#39;unpacks&#39; settings into / from strings, and persists to the <code>props.settingsStorage</code>, so that users don&#39;t need to do that in their codes. </p>
+				<p>By default, &#39;packs&#39; always uses <code>JSON.stringify()</code> to encode settings, even if the value is a string, and &#39;unpacks&#39; always attempts to decode strings with <code>JSON.parse()</code> and, if that fails, return the strings as is. This default behaviour ensures that a value being packed and then unpacked would not change. However, if the value is a string, the stringified version of the string (i.e. wrapped in &quot;&quot;) is put inside the store. </p>
+				<p>The packing and unpacking behaviours can be customised at general level or at individual property level. An unpacker at individual level can also act as an initializer, to provide a default value where no value is provided in <code>props.settings</code>.</p>
 				<p>When using Typescript the wrapper uses a generic type variable to denote the setting&#39;s type, allowing the development tools to type checking and autocomplete the unpacked settings.</p>
 				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
 					<h2>Usage</h2>
 				</a>
-				<p>The code examples are provided in Typescript and TSX.</p>
+				<p>See below. The code examples are provided in Typescript and TSX.</p>
 				<a href="#install-the-library" id="install-the-library" style="color: inherit; text-decoration: none;">
 					<h3>Install the library</h3>
 				</a>
@@ -81,22 +83,8 @@
 				<a href="#import-the-artifacts" id="import-the-artifacts" style="color: inherit; text-decoration: none;">
 					<h3>Import the artifacts</h3>
 				</a>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {TypedSettingProps, ASIS, SettingsComponentProps, StringifyParseOptions} <span class="hljs-keyword">from</span> <span class="hljs-string">"fitbit-settings-commons"</span></code></pre>
-				<a href="#using-settingscomponentprops" id="using-settingscomponentprops" style="color: inherit; text-decoration: none;">
-					<h3>Using SettingsComponentProps</h3>
-				</a>
-				<p><code>SettingsComponentProps</code> is the type of the &#39;props&#39; parameter received by the settings JSX. It can be used in TSX to type the &#39;props&#39; parameter in typescript to provide autocomplete and type checking.</p>
-				<pre><code class="language-tsx">function SettingsPage(props: SettingsComponentProps) {
-    return (
-      &lt;Page&gt;
-        &lt;Section
-          title={&lt;Text bold align=&quot;center&quot;&gt;Demo Settings&lt;/Text&gt;}&gt;
-        &lt;/Section&gt;
-      &lt;/Page&gt;
-    );
-  }
-
-registerSettingsPage(SettingsPage);  </code></pre>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {TypedSettingProps, ASIS, SettingsComponentProps, StringifyParseOptions} <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;fitbit-settings-commons&quot;</span></code></pre>
+				<p>See <a href="https://bingtimren.github.io/fitbit-settings-commons/">API document</a> for details.</p>
 				<a href="#using-typedsettingprops-wrapper" id="using-typedsettingprops-wrapper" style="color: inherit; text-decoration: none;">
 					<h3>Using TypedSettingProps Wrapper</h3>
 				</a>
@@ -127,9 +115,9 @@ registerSettingsPage(SettingsPage);  </code></pre>
 				<p>Use <code>update()</code> method to put new setting values or replace existing values. It receives an object as parameter, copies all enumerable own properties of the object to the unpacked settings (similar to <code>Object.assign()</code>), and persists the changes to <code>props.settingsStorage</code> behind the scene. </p>
 				<p>For example:</p>
 				<pre><code class="language-typescript">    typedSetting.update({
-      stringVal:<span class="hljs-string">"new string val"</span>
+      stringVal:<span class="hljs-string">&quot;new string val&quot;</span>
     })</code></pre>
-				<p>The parameter of the <code>update()</code> method is typed. In typescript, type checking and autocomplete will be available to the parameter.</p>
+				<p>If SettingsType generic type is provided, the parameter of the <code>update()</code> method is typed. In typescript, type checking and autocomplete will be available to the parameter.</p>
 				<pre><code class="language-typescript">    typedSetting.update({
       stringVal: <span class="hljs-number">42</span> <span class="hljs-comment">// error</span>
     })</code></pre>
@@ -137,16 +125,16 @@ registerSettingsPage(SettingsPage);  </code></pre>
 					<h3>Updating part of a setting object or array</h3>
 				</a>
 				<p>If an <strong>existing</strong> setting value is an object or array, to update <strong>part</strong> of the value without replacing the whole object or array, use <code>getToUpdate()</code>. This method returns a tracked setting object. When accessing a property of the tracked setting object through a key, the key is marked as &#39;dirty&#39;, meaning it&#39;s assumed that the property is changed and needs to be persisted to <code>settingsStorage</code> later. In the end the <code>commit()</code> method of the wrapper needs to be called to persist all the &#39;dirty&#39; properties. For example: </p>
-				<pre><code class="language-typescript">    typedSetting.getToUpdate().objVal!.stringProp = <span class="hljs-string">'new property'</span>;
-    typedSetting.getToUpdate().arrayVal!.push(<span class="hljs-string">'new element'</span>);
+				<pre><code class="language-typescript">    typedSetting.getToUpdate().objVal!.stringProp = <span class="hljs-string">&#x27;new property&#x27;</span>;
+    typedSetting.getToUpdate().arrayVal!.push(<span class="hljs-string">&#x27;new element&#x27;</span>);
     typedSetting.commit();</code></pre>
 				<p>The returned tracked setting object is typed and readonly. Any property such as an object or array can be partially updated but not replaced. To set a property directly, use <code>update()</code>.</p>
 				<a href="#updating-a-setting-asis" id="updating-a-setting-asis" style="color: inherit; text-decoration: none;">
 					<h3>Updating a setting ASIS</h3>
 				</a>
-				<p>Another way of updating settings is to make the changes directly on the unpacked settings, then call <code>update()</code> with a constant <code>ASIS</code> that is exported from this library as a marker to denote the changed properties. The value of the denoted property would be taken from the unpacked settings &quot;as is&quot;. </p>
+				<p>Another way of updating settings is to make the changes directly on the unpacked settings, then call <code>update()</code> with a constant <code>ASIS</code>, which is exported from this library as a marker to denote the changed properties. The value of the denoted property would be taken from the unpacked settings &quot;as is&quot;. </p>
 				<p>For example, after partially changing the property <code>objVal</code>, the two callings of <code>update()</code> are equal, however using ASIS makes the method 1 shorter and less prone to error.</p>
-				<pre><code class="language-typescript">    typedSetting.get().objVal!.stringProp = <span class="hljs-string">"new string"</span>;
+				<pre><code class="language-typescript">    typedSetting.get().objVal!.stringProp = <span class="hljs-string">&quot;new string&quot;</span>;
     <span class="hljs-comment">// method 1</span>
     typedSetting.update({
       objVal: ASIS
@@ -158,29 +146,28 @@ registerSettingsPage(SettingsPage);  </code></pre>
 				<a href="#set-stringify-parse-behaviour" id="set-stringify-parse-behaviour" style="color: inherit; text-decoration: none;">
 					<h3>Set Stringify Parse Behaviour</h3>
 				</a>
-				<p>As mentioned, when the wrapper extracts values from props.settings, wrapper calls <code>JSON.parse()</code> to extract non-string objects. When wrapper persists value into props.settingsStorage, wrapper calls <code>JSON.stringify()</code> to encode values into strings. Enum <code>StringifyParseOptions</code> provides three options to set the stringify/parse behaviour of the wrapper. </p>
-				<p>To set a behaviour other than the default, pass a second parameter into the wrapper&#39;s constructor, for example:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> typedSetting : TypedSettingProps&lt;SettingType&gt;
-    = <span class="hljs-keyword">new</span> TypedSettingProps(props, StringifyParseOptions.Stringify_NonString_Parse_Always);</code></pre>
-				<p>The three options are:</p>
-				<p><strong>Stringify_Always_Parse_Always [Default Option]</strong>: </p>
+				<p>The constructor of the wrapper <code>TypedSettingProps</code> can receive two additional optional parameters to customise the packing / unpacking / initialisation behaviour of the wrapper for individual setting keys as well as the default behaviour for all keys.</p>
+				<pre><code class="language-typescript">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params">
+    <span class="hljs-keyword">private</span> props: SettingsComponentProps,
+    <span class="hljs-keyword">private</span> packerUnpackers?: PackerUnpackerOption&lt;SettingsType&gt;,
+    defaultPackerUnpacker?: DefaultPackerUnpackerOption
+  </span>) </code></pre>
+				<p>The parameter <code>packerUnpackers</code> customise wrapper&#39;s packing / unpacking / initialization behaviour for individual properties of the settings. The value should be an object with matching keys of the SettingsType. Under a matching key, &#39;packer&#39; and &#39;unpackInitiator&#39; can optionally be provided as functions. For example:</p>
+				<pre><code class="language-typescript">  {
+    stringConfusingVal: {
+      packer: <span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> v,
+      unpackInitiator: <span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> v
+    }
+  }</code></pre>
 				<ul>
-					<li>On update always JSON.stringify, even if value is a string (&#39;8&#39; would be set as &#39;&quot;8&quot;&#39; in storage);</li>
-					<li>On unpacking always attempts JSON.parse, if fails then use the string as is;</li>
-					<li>This is the default behaviour, it make sure values after packed / unpacked remain the same. However, string values will be put into props.settingsStorage as JSON as well, meaning the extra &#39;&quot;&#39; wrapping the strings.</li>
+					<li>A packer function receives a value of the type of the matching SettingsType property and returns a string.</li>
+					<li>An unpackInitiator receives a string or <code>undefined</code> and returns a value of the type of the matching SettingsType property. If an unpackInitiator is provided, but no setting is under the matching key in <code>props.settings</code>, the unpackInitiator will be called with <code>undefined</code>, acting as an initiator to return a default value for the key.</li>
 				</ul>
-				<p><strong>Stringify_NonString_Parse_Always</strong>:</p>
-				<ul>
-					<li>On update only JSON.stringify non-string values;</li>
-					<li>On unpacking always attempts JSON.parse;</li>
-					<li>This option does not guarantee round-trip (&#39;8&#39; packed as &#39;8&#39; then unpacked as 8, a number)</li>
-				</ul>
-				<p><strong>Stringify_NonString_Parse_Key_Decide</strong>:</p>
-				<ul>
-					<li>On update only JSON.stringify non-string values;</li>
-					<li>On unpacking, when key ends with &quot;_s&quot; or &quot;_S&quot; (indicating string value) does NOT attempt JSON.parse, otherwise attempts JSON.parse;</li>
-					<li>This option works if you name the keys of string type values to end with &quot;_s&quot; or &quot;_S&quot;</li>
-				</ul>
+				<p>The parameter <code>defaultPackerUnpacker</code> customise the default pack / unpack behaviour of the wrapper for all SettingsType properties. The value should be an object, with optional keys <code>packer</code> and / or <code>unpacker</code> providing the default packer / unpacker. Example value below sets a behaviour identical to the default behaviour of the wrapper.</p>
+				<pre><code class="language-typescript">  {
+    packer: <span class="hljs-built_in">JSON</span>.stringify,
+    unpacker: jsonParseUnpackInitiator
+  }</code></pre>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -193,20 +180,32 @@ registerSettingsPage(SettingsPage);  </code></pre>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum">
-						<a href="enums/stringifyparseoptions.html" class="tsd-kind-icon">Stringify<wbr>Parse<wbr>Options</a>
-					</li>
 					<li class=" tsd-kind-class tsd-has-type-parameter">
 						<a href="classes/typedsettingprops.html" class="tsd-kind-icon">Typed<wbr>Setting<wbr>Props</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-is-not-exported">
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/defaultpackerunpackeroption.html" class="tsd-kind-icon">Default<wbr>Packer<wbr>Unpacker<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#asis" class="tsd-kind-icon">ASIS</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#nonundefined" class="tsd-kind-icon">Non<wbr>Undefined</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="globals.html#packerunpackeroption" class="tsd-kind-icon">Packer<wbr>Unpacker<wbr>Option</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="globals.html#settingscomponentprops" class="tsd-kind-icon">Settings<wbr>Component<wbr>Props</a>
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="globals.html#asis" class="tsd-kind-icon">ASIS</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#jsonparseunpackinitiator" class="tsd-kind-icon">json<wbr>Parse<wbr>Unpack<wbr>Initiator</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#stringifynonstring" class="tsd-kind-icon">stringify<wbr>Non<wbr>String</a>
 					</li>
 				</ul>
 			</nav>
@@ -218,57 +217,15 @@ registerSettingsPage(SettingsPage);  </code></pre>
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
-				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
-				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
-				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
-				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
-				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
-				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
-				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
-				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
 			</ul>
 		</div>
 	</div>
@@ -278,6 +235,5 @@ registerSettingsPage(SettingsPage);  </code></pre>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
