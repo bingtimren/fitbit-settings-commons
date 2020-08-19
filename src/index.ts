@@ -16,10 +16,10 @@
  * registerSettingsPage(SettingsPage);
  * ```
  */
-export type SettingsComponentProps = Parameters<
-  Parameters<typeof registerSettingsPage>[0]
->[0];
-
+export interface SettingsComponentProps {
+	readonly settings: { [key: string]: string | undefined };
+	readonly settingsStorage: LiveStorage;
+}
 /**
  * A marker, to be used with TypedSettingProps.update()
  */
