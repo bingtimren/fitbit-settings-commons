@@ -26,7 +26,7 @@ npm i --save fitbit-settings-commons
 import {TypedSettingProps, ASIS, SettingsComponentProps, StringifyParseOptions} from "fitbit-settings-commons"
 ```
 
-See [API document](docs/index.html) for details.
+See [API document](https://bingtimren.github.io/fitbit-settings-commons/) for details.
 
 ### Using TypedSettingProps Wrapper
 
