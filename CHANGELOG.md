@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.6](https://github.com/bingtimren/fitbit-settings-commons/compare/v2.0.5...v2.0.6) (2020-08-24)
+
+
+
 ### [2.0.5](https://github.com/bingtimren/fitbit-settings-commons/compare/v2.0.4...v2.0.5) (2020-08-19)
 
 
