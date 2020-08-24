@@ -143,3 +143,34 @@ The parameter `defaultPackerUnpacker` customise the default pack / unpack behavi
     unpacker: jsonParseUnpackInitiator
   }
 ```
+
+### Extending type checking to "settingsKey" in settings components
+
+Fitbit settings components, such as `<TextInput>`, accepts a `settingsKey` property that specifies where in the settings storage to put the input value. Without type checking, you can give it any string. 
+
+If you are already using fitbit-sdk-types ([https://github.com/SergioMorchon/fitbit-sdk-types](https://github.com/SergioMorchon/fitbit-sdk-types)), then you can extend type checking to the "settingsKey" in the components. To use this feature, first follow the steps in fitbit-sdk-types package's README and make sure it's properly set up. Then replace the 'fitbit-sdk-types' package with a patched version:
+
+```
+npm i --save-dev github:bingtimren/fitbit-sdk-types#release
+```
+Now the components can accept a `SettingsType` type variable, and the `settingsKey` property would only accept a key in the `SettingsType` that has a value type matching the type of value that the component will put under that key.
+
+For example, below `<Slider>` accepts a type variable SliderSettingsType. Since the value `<Slider>` puts is a number, now `settingsKey` will only accept `numberKey` and `assignableKey` as ligitimate values because other keys does not match the type.
+
+```typescript
+interface SliderSettingsType {
+	stringKey: string;
+	booleanKey: boolean;
+	numberKey: number;
+	assignableKey: number | undefined;
+}
+
+<Slider<SliderSettingsType>
+	label="Example"
+	settingsKey="numberKey"
+	min="0"
+	max="60"
+/>;
+```
+
+See [https://github.com/bingtimren/fitbit-sdk-types/tree/master/test-code-samples/settings](https://github.com/bingtimren/fitbit-sdk-types/tree/master/test-code-samples/settings) for more usage examples for other components.
