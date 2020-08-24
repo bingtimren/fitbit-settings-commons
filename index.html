@@ -168,6 +168,28 @@
     packer: <span class="hljs-built_in">JSON</span>.stringify,
     unpacker: jsonParseUnpackInitiator
   }</code></pre>
+				<a href="#extending-type-checking-to-quotsettingskeyquot-in-settings-components" id="extending-type-checking-to-quotsettingskeyquot-in-settings-components" style="color: inherit; text-decoration: none;">
+					<h3>Extending type checking to &quot;settingsKey&quot; in settings components</h3>
+				</a>
+				<p>Fitbit settings components, such as <code>&lt;TextInput&gt;</code>, accepts a <code>settingsKey</code> property that specifies where in the settings storage to put the input value. Without type checking, you can give it any string. </p>
+				<p>If you are already using fitbit-sdk-types (<a href="https://github.com/SergioMorchon/fitbit-sdk-types">https://github.com/SergioMorchon/fitbit-sdk-types</a>), then you can extend type checking to the &quot;settingsKey&quot; in the components. To use this feature, first follow the steps in fitbit-sdk-types package&#39;s README and make sure it&#39;s properly set up. Then replace the &#39;fitbit-sdk-types&#39; package with a patched version:</p>
+				<pre><code><span class="hljs-built_in">npm</span> i --save-dev github:bingtimren/fitbit-sdk-types<span class="hljs-comment">#release</span></code></pre>
+				<p>Now the components can accept a <code>SettingsType</code> type variable, and the <code>settingsKey</code> property would only accept a key in the <code>SettingsType</code> that has a value type matching the type of value that the component will put under that key.</p>
+				<p>For example, below <code>&lt;Slider&gt;</code> accepts a type variable SliderSettingsType. Since the value <code>&lt;Slider&gt;</code> puts is a number, now <code>settingsKey</code> will only accept <code>numberKey</code> and <code>assignableKey</code> as ligitimate values because other keys does not match the type.</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">interface</span> SliderSettingsType {
+    stringKey: <span class="hljs-built_in">string</span>;
+    booleanKey: <span class="hljs-built_in">boolean</span>;
+    numberKey: <span class="hljs-built_in">number</span>;
+    assignableKey: <span class="hljs-built_in">number</span> | <span class="hljs-literal">undefined</span>;
+}
+
+&lt;Slider&lt;SliderSettingsType&gt;
+    label=<span class="hljs-string">&quot;Example&quot;</span>
+    settingsKey=<span class="hljs-string">&quot;numberKey&quot;</span>
+    min=<span class="hljs-string">&quot;0&quot;</span>
+    max=<span class="hljs-string">&quot;60&quot;</span>
+/&gt;;</code></pre>
+				<p>See <a href="https://github.com/bingtimren/fitbit-sdk-types/tree/master/test-code-samples/settings">https://github.com/bingtimren/fitbit-sdk-types/tree/master/test-code-samples/settings</a> for more usage examples for other components.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
